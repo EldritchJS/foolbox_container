@@ -8,6 +8,9 @@ from kafka import KafkaConsumer
 import foolbox
 import numpy as np
 from foolbox import zoo
+from PIL import Image
+import requests
+from io import BytesIO
 
 def main(args):
     logging.info('brokers={}'.format(args.brokers))
@@ -34,9 +37,18 @@ def main(args):
             logging.info('received URI {}'.format(image_uri))
             logging.info('received label {}'.format(label))
             logging.info('downloading image')
-            image = urllib.urlretrieve(message)
+            response = requests.get(image_uri)
+            img = Image.open(BytesIO(response.content))
+            image = np.array(pic.getdata()).reshape(img.size[0], img.size[1], 3)
             logging.info('downloaded image')
-            adversarial = attack(image[:,:,::-1], label)
+            images = np.ndarray(shape=(2,32,32,3), dtype=np.float32)
+            images[0] = image
+            adversarial = attack(image, label)
+            images[1] = adversarial
+            preds = model.forward(images)
+            orig_inf = np.argmax(preds[0])
+            adv_inf = np.argmax(preds[1])
+            logging.info('original inference: {}  adversarial inference: {}'.format(orig_inf, adv_inf))
 
 def get_arg(env, default):
     return os.getenv(env) if os.getenv(env, '') is not '' else default
@@ -70,7 +82,7 @@ if __name__ == '__main__':
     parser.add_argument(
             '--model',
             help='Foolbox zoo model uri MODEL_URI',
-            default='https://github.com/EldritchJS/mnist_challenge')
+            default='https://github.com/EldritchJS/cifar10_challenge')
     args = parse_args(parser)
     main(args)
     logging.info('exiting')
