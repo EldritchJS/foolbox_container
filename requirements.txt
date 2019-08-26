@@ -3,4 +3,6 @@ foolbox
 numpy
 keras
 tensorflow
+pillow
+requests
 
