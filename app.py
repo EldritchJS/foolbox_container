@@ -45,10 +45,11 @@ def main(args):
             images[0] = image
             adversarial = attack(image, label)
             images[1] = adversarial
-            preds = model.forward(images)
-            orig_inf = np.argmax(preds[0])
-            adv_inf = np.argmax(preds[1])
-            logging.info('original inference: {}  adversarial inference: {}'.format(orig_inf, adv_inf))
+            logging.info('adversarial image generated')
+#            preds = model.forward(images)
+#            orig_inf = np.argmax(preds[0])
+#            adv_inf = np.argmax(preds[1])
+#            logging.info('original inference: {}  adversarial inference: {}'.format(orig_inf, adv_inf))
 
 def get_arg(env, default):
     return os.getenv(env) if os.getenv(env, '') is not '' else default
