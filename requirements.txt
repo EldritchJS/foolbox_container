@@ -2,5 +2,5 @@ kafka
 foolbox
 numpy
 keras
-tensorflow-gpu
+tensorflow
 

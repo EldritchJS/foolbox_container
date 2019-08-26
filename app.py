@@ -12,12 +12,12 @@ from foolbox import zoo
 def main(args):
     logging.info('brokers={}'.format(args.brokers))
     logging.info('topic={}'.format(args.topic))
-    logging.info('creating kafka producer')
+    logging.info('creating kafka consumer')
     consumer = KafkaConsumer(
             args.topic,
             bootstrap_servers=args.brokers,
             value_deserializer=lambda val: loads(val.decode('utf-8')))
-    logging.info('finished creating kafka producer')
+    logging.info('finished creating kafka consumer')
 
     logging.info('model={}'.format(args.model))
     model = zoo.get_model(url=args.model)
@@ -26,14 +26,17 @@ def main(args):
     logging.info('creating attack {}'.format(args.attack))
     attack = foolbox.attacks.FGSM(model)
     logging.info('finished creating attack')
-    
-    for message in consumer:
-        message = message.value
-        logging.info('received URI {}'.format(message))
-        logging.info('downloading image')
-        dl = urllib.urlretrieve(message)
-        logging.info('downloaded image')
-        adversarial = attack(image[:,:,::-1], label)
+   
+    while True:
+        for message in consumer:
+            image_uri = message.value.url
+            label = message.value.label
+            logging.info('received URI {}'.format(image_uri))
+            logging.info('received label {}'.format(label))
+            logging.info('downloading image')
+            image = urllib.urlretrieve(message)
+            logging.info('downloaded image')
+            adversarial = attack(image[:,:,::-1], label)
 
 def get_arg(env, default):
     return os.getenv(env) if os.getenv(env, '') is not '' else default
@@ -55,7 +58,7 @@ if __name__ == '__main__':
     parser.add_argument(
             '--brokers',
             help='The bootstrap servers, env variable KAFKA_BROKERS',
-            default='localhost:9092')
+            default='kafka:9092')
     parser.add_argument(
             '--topic',
             help='Topic to read from, env variable KAFKA_TOPIC',
