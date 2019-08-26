@@ -39,7 +39,7 @@ def main(args):
             logging.info('downloading image')
             response = requests.get(image_uri)
             img = Image.open(BytesIO(response.content))
-            image = np.array(pic.getdata()).reshape(img.size[0], img.size[1], 3)
+            image = np.array(img.getdata()).reshape(img.size[0], img.size[1], 3)
             logging.info('downloaded image')
             images = np.ndarray(shape=(2,32,32,3), dtype=np.float32)
             images[0] = image
