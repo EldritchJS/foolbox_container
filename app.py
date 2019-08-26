@@ -33,7 +33,7 @@ def main(args):
         logging.info('downloading image')
         dl = urllib.urlretrieve(message)
         logging.info('downloaded image')
-        adversarial = attack(image[:,:,::-1], label
+        adversarial = attack(image[:,:,::-1], label)
 
 def get_arg(env, default):
     return os.getenv(env) if os.getenv(env, '') is not '' else default
