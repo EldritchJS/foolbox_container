@@ -13,6 +13,14 @@ import requests
 from io import BytesIO
 
 def main(args):
+    logging.info('model={}'.format(args.model))
+    model = zoo.get_model(url=args.model)
+    logging.info('finished acquiring model')
+
+    logging.info('creating attack {}'.format(args.attack))
+    attack = foolbox.attacks.FGSM(model)
+    logging.info('finished creating attack')
+
     logging.info('brokers={}'.format(args.brokers))
     logging.info('topic={}'.format(args.topic))
     logging.info('creating kafka consumer')
@@ -22,18 +30,10 @@ def main(args):
             value_deserializer=lambda val: loads(val.decode('utf-8')))
     logging.info('finished creating kafka consumer')
 
-    logging.info('model={}'.format(args.model))
-    model = zoo.get_model(url=args.model)
-    logging.info('finished acquiring model')
-
-    logging.info('creating attack {}'.format(args.attack))
-    attack = foolbox.attacks.FGSM(model)
-    logging.info('finished creating attack')
-   
     while True:
         for message in consumer:
-            image_uri = message.value.url
-            label = message.value.label
+            image_uri = message.value['url']
+            label = message.value['label']
             logging.info('received URI {}'.format(image_uri))
             logging.info('received label {}'.format(label))
             logging.info('downloading image')
