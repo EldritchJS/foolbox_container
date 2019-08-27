@@ -46,10 +46,11 @@ def main(args):
             adversarial = attack(image, label)
             images[1] = adversarial
             logging.info('adversarial image generated')
-#            preds = model.forward(images)
-#            orig_inf = np.argmax(preds[0])
-#            adv_inf = np.argmax(preds[1])
-#            logging.info('original inference: {}  adversarial inference: {}'.format(orig_inf, adv_inf))
+#            preds = model.forward(images)  # Foolbox v2.0 only
+            preds = model.batch_predictions(images)
+            orig_inf = np.argmax(preds[0])
+            adv_inf = np.argmax(preds[1])
+            logging.info('original inference: {}  adversarial inference: {}'.format(orig_inf, adv_inf))
 
 def get_arg(env, default):
     return os.getenv(env) if os.getenv(env, '') is not '' else default
