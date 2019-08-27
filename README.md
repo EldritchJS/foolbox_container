@@ -11,9 +11,9 @@ The generator expects a JSON object with keys `url` and `label` for the url of t
 
 An example JSON object generator which publishes to a Kafka topic this generator consumes can be found [here](https://github.com/EldritchJS/url_label_producer) which can be created in an OpenShift pod as follows:
 
-`oc new-app centos/python36-centos7~https://github.com/eldritchjs/url_label_producer`
+`oc new-app centos/python-36-centos7~https://github.com/eldritchjs/url_label_producer`
 
 
 The adversarial image generator pod is created as follows:
 
-`oc new-app centos/python36-centos7~https://github.com/eldritchjs/foolbox_container`
+`oc new-app centos/python-36-centos7~https://github.com/eldritchjs/foolbox_container`
