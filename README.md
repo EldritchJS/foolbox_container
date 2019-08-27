@@ -9,6 +9,11 @@ The adversarial generator also expects a repo containing a Foolbox Model Zoo com
 
 The generator expects a JSON object with keys `url` and `label` for the url of the image to be attacked and its true label, respectively. It will attempt to generate an adversary image and report the model's prediction for the original image and its adversary.
 
-The generator pod is created as follows:
+An example JSON object generator which publishes to a Kafka topic this generator consumes can be found [here](https://github.com/EldritchJS/url_label_producer) which can be created in an OpenShift pod as follows:
+
+`oc new-app centos/python36-centos7~https://github.com/eldritchjs/url_label_producer`
+
+
+The adversarial image generator pod is created as follows:
 
 `oc new-app centos/python36-centos7~https://github.com/eldritchjs/foolbox_container`
