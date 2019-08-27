@@ -1,4 +1,4 @@
-Containerized Foolbox adversarial image generation
+## Containerized Foolbox adversarial image generation
 
 Intended for deployment on an OpenShift cluster. Expects an available Kafka broker, which can be created with the following commands:
 
